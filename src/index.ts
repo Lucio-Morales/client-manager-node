@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mainRouter from './routes';
 
 dotenv.config();
 
@@ -10,9 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (_req, res) => {
-  res.send('Servidor ha nacido ✅');
-});
+app.use('/', mainRouter);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

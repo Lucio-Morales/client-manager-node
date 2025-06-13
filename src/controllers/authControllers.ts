@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
-import { registerUser, loginUser } from '../services/authServices';
+import { register, login } from '../services/authServices';
 
-export const register = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+export const registerUser = async (req: Request, res: Response) => {
+  const { name, email, password } = req.body;
 
-  if (!email || !password) {
+  if (!name || !email || !password) {
     res.status(400).json({ message: 'Email y contraseña son requeridos.' });
     return;
   }
 
   try {
-    const registerData = await registerUser(email, password);
+    const registerData = await register(email, password);
     res.status(201).json(registerData);
     return;
   } catch (error: any) {
@@ -19,7 +19,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -28,7 +28,7 @@ export const login = async (req: Request, res: Response) => {
   }
 
   try {
-    const result = await loginUser(email, password);
+    const result = await login(email, password);
     res.status(200).json(result); // incluirá token, user, etc.
     return;
   } catch (error: any) {

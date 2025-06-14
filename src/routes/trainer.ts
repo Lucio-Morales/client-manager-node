@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { createUser, getUsers } from '../controllers/usersControllers';
+import { getTrainerDashboard } from '../controllers/trainerControllers';
 
 const trainerRouter = Router();
 
-trainerRouter.get('/', getUsers).post('/', createUser);
+trainerRouter.get('/dashboard', getTrainerDashboard);
 
 export default trainerRouter;

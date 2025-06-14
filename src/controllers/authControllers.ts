@@ -1,17 +1,18 @@
 import { Request, Response } from 'express';
 import { register, login } from '../services/authServices';
 
+// REGISTER
 export const registerUser = async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
-  if (!name || !email || !password) {
-    res.status(400).json({ message: 'Email y contraseña son requeridos.' });
+  if (!name || !email || !password || !role) {
+    res.status(400).json({ message: 'Todos los campos son obligatorios.' });
     return;
   }
 
   try {
-    const registerData = await register(email, password);
-    res.status(201).json(registerData);
+    const newUser = await register({ name, email, password, role });
+    res.status(201).json({ message: 'Usuario registrado correctamente', user: newUser });
     return;
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -19,6 +20,7 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
+// LOGIN
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 

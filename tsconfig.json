@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "types": ["node", "express"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "types"],
   "exclude": ["node_modules", "dist"]
 }

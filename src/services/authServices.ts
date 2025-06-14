@@ -1,30 +1,60 @@
 import { supabase } from '../db/supabase';
+import { RegisterUserInput, Role } from '../types/user';
+import bcrypt from 'bcrypt';
+import { signToken } from '../utils/jwt';
 
-export async function register(email: string, password: string) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-  });
+export async function register(registerData: RegisterUserInput) {
+  const { name, email, password, role } = registerData;
 
-  if (error) throw new Error(error.message);
+  const { data: existingUser, error: fetchError } = await supabase
+    .from('user')
+    .select('id')
+    .eq('email', email)
+    .single();
 
-  return data;
+  if (existingUser) {
+    throw new Error('El email ya está en uso.');
+  }
+
+  if (fetchError && fetchError.code !== 'PGRST116') {
+    throw new Error('Error al verificar el usuario existente');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const { data: newUser, error: insertError } = await supabase
+    .from('user')
+    .insert([{ name, email, password: hashedPassword, role }])
+    .select('*')
+    .single();
+
+  if (insertError) {
+    throw new Error('Error al crear el usuario');
+  }
+
+  const { password: _, ...userWithoutPassword } = newUser;
+  return userWithoutPassword;
 }
 
 export async function login(email: string, password: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
+  const { data: user, error } = await supabase.from('user').select('*').eq('email', email).single();
+
+  if (error || !user) {
+    throw new Error('Error buscando al usuario con ese email.');
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw new Error('Credenciales invalidas.');
+  }
+
+  const token = signToken({
+    id: user.id,
+    role: user.role,
   });
 
-  if (error) throw new Error(error.message);
-  return data;
-}
+  const userWithToken = { id: user.id, name: user.name, email: user.email, role: user.role, token };
 
-export async function getUserFromToken(token: string) {
-  const { data, error } = await supabase.auth.getUser(token);
-
-  if (error || !data.user) throw new Error('Token inválido o expirado.');
-
-  return data.user;
+  return userWithToken;
 }

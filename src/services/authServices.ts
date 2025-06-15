@@ -54,7 +54,19 @@ export async function login(email: string, password: string) {
     role: user.role,
   });
 
-  const userWithToken = { id: user.id, name: user.name, email: user.email, role: user.role, token };
+  const safeUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
 
-  return userWithToken;
+  return {
+    user: safeUser,
+    token,
+  };
+
+  // const userWithToken = { id: user.id, name: user.name, email: user.email, role: user.role, token };
+
+  // return userWithToken;
 }

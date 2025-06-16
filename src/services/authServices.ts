@@ -25,15 +25,14 @@ export async function register(registerData: RegisterUserInput) {
   const { data: newUser, error: insertError } = await supabase
     .from('user')
     .insert([{ name, email, password: hashedPassword, role }])
-    .select('*')
+    .select('id, name, email, role')
     .single();
 
   if (insertError) {
     throw new Error('Error al crear el usuario');
   }
 
-  const { password: _, ...userWithoutPassword } = newUser;
-  return userWithoutPassword;
+  return newUser;
 }
 
 export async function login(email: string, password: string) {

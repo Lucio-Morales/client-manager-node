@@ -12,7 +12,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
   try {
     const newUser = await register({ name, email, password, role });
-    res.status(201).json({ message: 'Usuario registrado correctamente', user: newUser });
+    res.status(201).json({ success: true, message: 'Usuario registrado correctamente', user: newUser });
     return;
   } catch (error: any) {
     res.status(500).json({ message: error.message });

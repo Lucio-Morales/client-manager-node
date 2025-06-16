@@ -3,6 +3,7 @@ import { RegisterUserInput, Role } from '../types/user';
 import bcrypt from 'bcrypt';
 import { signToken } from '../utils/jwt';
 
+// REGISTRO
 export async function register(registerData: RegisterUserInput) {
   const { name, email, password, role } = registerData;
 
@@ -35,6 +36,7 @@ export async function register(registerData: RegisterUserInput) {
   return newUser;
 }
 
+// LOGIN
 export async function login(email: string, password: string) {
   const { data: user, error } = await supabase.from('user').select('*').eq('email', email).single();
 

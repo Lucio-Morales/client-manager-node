@@ -1,5 +1,5 @@
-// Lee el JWT desde el header Authorization
-// Lo verifica.
+// Extrae el JWT desde el header Authorization.
+// Verifica que sea valido.
 // Agrega req.user = {id, role}
 
 import { Request, Response, NextFunction } from 'express';

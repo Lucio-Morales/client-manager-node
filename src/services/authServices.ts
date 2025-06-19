@@ -1,5 +1,5 @@
 import { supabase } from '../db/supabase';
-import { RegisterUserInput, Role } from '../types/user';
+import { RegisterUserInput } from '../types/user';
 import bcrypt from 'bcrypt';
 import { signToken } from '../utils/jwt';
 
@@ -32,6 +32,12 @@ export async function register(registerData: RegisterUserInput) {
   if (insertError) {
     throw new Error('Error al crear el usuario');
   }
+
+  const { error: profileError } = await supabase.from('trainers_profile').insert({
+    id: newUser.id,
+  });
+
+  if (profileError) throw new Error(profileError.message);
 
   return newUser;
 }
@@ -66,8 +72,4 @@ export async function login(email: string, password: string) {
     user: safeUser,
     token,
   };
-
-  // const userWithToken = { id: user.id, name: user.name, email: user.email, role: user.role, token };
-
-  // return userWithToken;
 }

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { createClient, getClients } from '../controllers/clientsControllers';
+import { postClient } from '../controllers/clientsControllers';
 
 const clientRouter = Router();
 
-clientRouter.post('/create', createClient).get('/get_clients', getClients);
+clientRouter.post('/create', postClient);
 
 export default clientRouter;

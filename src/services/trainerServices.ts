@@ -20,5 +20,13 @@ export async function fetchTrainerProfile(userId: string) {
     throw new Error(error.message);
   }
 
-  return data;
+  return {
+    id: data.id,
+    name: data.user.name,
+    email: data.user.email,
+    bio: data.bio,
+    specialities: data.specialities,
+    available: data.available,
+    avatar: data.avatar,
+  };
 }

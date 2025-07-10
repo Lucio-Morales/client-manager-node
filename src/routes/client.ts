@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { postClient } from '../controllers/clientsControllers';
+import { findClient } from '../controllers/clientsControllers';
 
 const clientRouter = Router();
 
-clientRouter.post('/create', postClient);
+clientRouter.get('/search', findClient);
 
 export default clientRouter;
